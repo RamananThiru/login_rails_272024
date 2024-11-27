@@ -322,4 +322,9 @@ Devise.setup do |config|
     ]
     jwt.expiration_time = 1.day.to_i
   end
+
+  # ERROR: Your application has sessions disabled. To write to the session you must first configure a session store
+  config.warden do |manager|
+    manager.scope_defaults :user, store: false
+  end
 end
