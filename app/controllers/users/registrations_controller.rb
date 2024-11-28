@@ -12,14 +12,26 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def respond_with(resource, _opts = {})
     if resource.persisted?
-      render json: {
-        message: 'Signup successful',
-        user: resource,
-        token: request.env['warden-jwt_auth.token']
-      }, status: :ok
+      render json: registration_success_response(resource), status: :ok
     else
-      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+      render json: registration_error_response(resource), status: :unprocessable_entity
     end
+  end
+
+  def registration_success_response(resource)
+    {
+      message: 'Signup successful',
+      token: request.env['warden-jwt_auth.token']
+    }
+  end
+
+  # Custom Validation Error Response for consistent error respons format
+  def registration_error_response(resource)
+    formatted_errors = {}
+    resource.errors.each do |error|
+      formatted_errors[error.attribute] = error.message
+    end
+    { errors: formatted_errors }
   end
 
   def account_update_params
