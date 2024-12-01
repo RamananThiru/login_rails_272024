@@ -31,7 +31,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     resource.errors.each do |error|
       formatted_errors[error.attribute] = error.message
     end
-    { errors: formatted_errors }
+    { errors: formatted_errors, message: 'Registration Failed for the user' }
   end
 
   def account_update_params
